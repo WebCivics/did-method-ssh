@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>did:git Method Specification</title>
+    <script src="https://www.w3.org/Tools/respec/respec-w3c" async class="remove"></script>
+    <script class="remove">
+        var respecConfig = {
+            specStatus: "unofficial",
+            shortName: "did-method-git",
+            group: "credentials",
+            editors: [{
+                name: "Timothy Holborn",
+                url: "https://www.linkedin.com/in/ubiquitous/",
+                company: "Web Civics",
+                companyURL: "https://webcivics.org/",
+                w3cid: 46729
+            }],
+            authors: [
+                {
+                    name: "Timothy Holborn",
+                    url: "https://www.linkedin.com/in/ubiquitous/",
+                    company: "Web Civics",
+                    companyURL: "https://webcivics.org/",
+                    w3cid: 46729
+                }],
+            github: "https://github.com/webcivics/did-method-git",
+
+            localBiblio: {
+                "DID-PRIMER": {
+                    title: "DID Primer",
+                    href: "https://github.com/WebOfTrustInfo/rebooting-the-web-of-trust-fall2017/blob/master/topics-and-advance-readings/did-primer.md",
+                    authors: [
+                        "Drummond Reed",
+                        "Manu Sporny",
+                    ],
+                    publisher: "Rebooting the Web of Trust 2017"
+                },
+                "DID-WEB": {
+                    title: "did:web Method Specification",
+                    href: "https://w3c-ccg.github.io/did-method-web/",
+                    editors: [
+                        "Michael Prorock",
+                        "Orie Steele",
+                        "Oliver Terbu"
+                    ],
+                    status: "Draft Community Group",
+                    publisher: "W3C Credentials Community Group"
+                },
+                "DID-KEY": {
+                    title: "did:key Method Specification",
+                    href: "https://w3c-ccg.github.io/did-method-key/",
+                    editors: [
+                        "Manu Sporny",
+                        "Dmitri Zagidulin",
+                        "Dave Longley",
+                        "Orie Steele"
+                    ],
+                    status: "Unofficial Draft",
+                    publisher: "W3C Credentials Community Group"
+                },
+                "DID-IN-git": {
+                    title: "The Decentralized Identifier (DID) in the git",
+                    href: "https://tools.ietf.org/html/draft-mayrhofer-did-git-01",
+                    authors: ["A. Mayrhofer", "D. Klesev", "M. Sabadello"],
+                    status: "Internet Draft",
+                    publisher: "IETF"
+                },
+                "WELL-KNOWN-DID": {
+                    title: "Well Known DID Configuration",
+                    href: "https://identity.foundation/specs/did-configuration/",
+                    editors: [
+                        "D. Buchner",
+                        "O. Steele",
+                        "T. Looker"
+                    ],
+                    status: "Approved Deliverable",
+                    publisher: "DIF"
+                },
+                "gitSEC": {
+                    title: "Well Known DID Configuration",
+                    href: "https://identity.foundation/specs/did-configuration/",
+                    editors: [
+                        "D. Buchner",
+                        "O. Steele",
+                        "T. Looker"
+                    ],
+                    status: "Approved Deliverable",
+                    publisher: "DIF"
+                }
+            },
+        };
+    </script>
+</head>
+<body>
+<section id="abstract">
+    <p>
+        Many early DID methods were based on distributed ledgers or other decentralized infrastructure, and some of
+        those still remain popular. However, it was not obvious that there was a DID for GIT, so i made one.
+        The DID method presented here is <code>did:git</code>.
+    </p>
+</section>
+<section id="sotd">
+</section>
+<section>
+    <h1>
+        Introduction
+    </h1>
+    <section>
+        <h2>
+            Preface
+        </h2>
+        <p>
+            The <code>did:git</code> method specification conforms to the requirements specified in the
+            Decentralized Identifiers v1.0 Specification [[DID-CORE]]. For more
+            information about DIDs and DID method specifications, please also see the
+            [[?DID-PRIMER]].
+        </p>
+    </section>
+    <section id="conformance">
+        <!-- This section is filled automatically by ReSpec. -->
+    </section>
+    <section>
+        <h2>
+            Example
+        </h2>
+
+        <pre class="example nohighlight" title="Example DIDs">
+did:git:git@github.com:WebCivics/did-method-git.git
+        </pre>
+        
+        <pre class="example" title="Example REPO DID document">
+            {
+                "@context": "https://www.w3.org/ns/did/v1",
+                "id": "did:git:github:WebCivics/did-method-git.git",
+                "publicKey": [
+                  {
+                    "id": "#keys-1",
+                    "type": "RsaVerificationKey2018",
+                    "owner": "did:git:github:WebCivics/did-method-git.git",
+                    "publicKeyPem": "<RSA public key>"
+                  }
+                ]
+              }
+        </pre>
+    
+        <pre class="example nohighlight" title="Example GIT:Commit DIDs">
+        {
+            "@context": "https://www.w3.org/ns/did/v1",
+            "id": "did:git:github:WebCivics/did-method-git/",
+            'commit':"e59a1820d9f79c54655c16777949b1b09e378671",
+            "publicKey": [
+              {
+                "id": "#keys-1",
+                "type": "RsaVerificationKey2018",
+                "owner": "did:git:github:WebCivics",
+                "publicKeyPem": "<RSA public key>"
+              }
+            ]
+          }
+        </pre>
+
+
+    </section>
+</section>
+
+<section>
+    <h1>
+        did:git Method Specification
+    </h1>
+
+    <section>
+        <h2>
+            Target system
+        </h2>
+        <p>
+            The target system of the <code>did:git</code> method is the GIT distributed version control system, originally 
+            authored by Linus Torvalds in 2005 for development of the Linux kernel. The source code for Git refers to the program as, 
+            "the information manager from hell." source: <a href="https://en.wikipedia.org/wiki/Git">WikiPedia</a>
+        </p>
+    </section>
+
+    <section>
+        <h2>
+            Method name
+        </h2>
+        <p>
+            The method name that shall identify this DID method is: <code>git</code>.
+
+            A DID that uses this method MUST begin with the following prefix:
+            <code>did:git</code>. Per the DID specification, this string MUST be in
+            lowercase.
+        </p>
+    </section>
+
+    <section>
+        <h2>
+            Method-specific identifier
+        </h2>
+        <p>
+            the method-specific identifier for a DID is a unique Git repository URL or Git commit hash.
+
+            The repository URL identifies a specific Git repository that can be cloned and manipulated using the Git protocol, 
+            while the commit hash represents a specific commit in the Git repository. Both the repository URL and the commit hash 
+            can be used to verify the authenticity and integrity of the associated data, which is a key feature of the DID specification.
+            The links to the formal rules describing valid GIT syntax will be added to the specification.
+        </p>
+        
+        <pre class="nohighlight">
+git-did = "did:git:" git
+        </pre>
+    </section>
+
+    <section>
+        <h2>
+            DID method operations
+        </h2>
+        <section>
+            <h3>
+                Create
+            </h3>
+            <p>
+                Creating a DID is done by:
+            </p>
+            <ol>
+                <li>
+                    Choose a Git repository: First, you'll need to choose a Git repository that you want to use for your DID. This might be a repository that you control, or it might be a public repository that you want to reference in your DID.
+                </li>
+                <li>
+                Create a Git commit: Next, you'll need to create a Git commit that contains the data you want to reference in your DID. This might be a JSON-LD file that describes your DID document, 
+                or it might be some other kind of data that you want to associate with your DID.
+                </li>
+                <li>
+                Push the commit to the repository: Once you've created the Git commit, 
+                you'll need to push it to the Git repository. This will make the commit publicly available and 
+                allow others to reference it in their DIDs.
+                </li>
+                <li>
+                Create a DID document: Using the Git commit hash or repository URL, you can create a DID document 
+                that references the data you want to associate with your DID. The DID document might include 
+                additional information such as public keys, service endpoints, or other metadata.
+                </li>
+                <li>
+                Publish the DID document: Finally, you'll need to publish the DID document to a 
+                decentralized identifier registry or other relevant platform. This will make the DID publicly 
+                available and allow others to resolve it and access the associated data.
+                </li>
+            </ol>
+
+        </section>
+
+        <section>
+            <h3>
+                Update
+            </h3>
+            <p>
+                The following steps MUST be executed to resolve a DID to a DID document using the
+                <code>did:git</code> method.
+            </p>
+
+            <ol>
+                <li>
+                    associated with your DID. This might involve updating the JSON-LD file that describes your DID document, 
+                    adding new public keys or service endpoints, or making other modifications to the associated data.
+                </li>
+                <li>
+                    Create a new Git commit: Once you've made the changes to the data, you'll need to create a new Git commit 
+                    that reflects those changes. This new commit will serve as the updated version of your DID.
+                </li>
+                <li>                    
+                    Push the commit to the repository: Once you've created the new Git commit, you'll need to push it to 
+                    the Git repository. This will make the updated data publicly available and allow others to reference 
+                    the updated version of your DID.
+                </li>
+                <li>                    
+                    Update the DID document: Using the new Git commit hash or repository URL, you can update the DID document 
+                    to reference the updated version of the associated data. This might involve updating the updated property 
+                    in the DID document, as well as any other relevant metadata.
+                </li>
+                <li>                    
+                    Publish the updated DID document: Finally, you'll need to publish the updated DID document to the relevant 
+                    platform or registry. This will make the updated DID publicly available and allow others to resolve it and 
+                    access the latest version of the associated data.
+                </li>
+            </ol>
+        </section>
+
+        <section>
+            <h3>
+                Read
+            </h3>
+            <p>
+                To read the DID document, the git repository must be accessible to the user. see <a href="#resolve"></a> section.
+            </p>
+            <ol>
+                <li>
+                    Resolve the DID: First, you'll need to resolve the DID to obtain the Git commit hash or repository URL that is associated with the DID. 
+                    This might involve querying a decentralized identifier registry or other relevant platform.
+                    </li><li>
+                    Clone the Git repository: Once you have the Git commit hash or repository URL, you'll need to clone the Git repository 
+                    to your local machine or server. This will allow you to access the data that is associated with the DID.
+                    </li><li>
+                    Access the data: Once you have the Git repository, you can access the data that is associated with the DID. 
+                    This might involve opening the JSON-LD file that describes the DID document, or accessing other files or data 
+                    that are associated with the DID.
+                    </li><li>
+                    Verify the data: It's a good idea to verify the data that is associated with the DID to ensure that it 
+                    hasn't been tampered with or modified. This might involve checking the digital signatures or other cryptographic proofs 
+                    that are associated with the data.
+                    </li><li>
+                    Use the data: Finally, you can use the data that is associated with the DID for whatever purpose you intended. 
+                    This might involve using the public keys in the DID document to authenticate the DID owner, 
+                    or accessing other metadata or data that is associated with the DID.
+                </li>
+
+            </ol>
+        </section>
+        <section>
+            <h3>
+                Fork
+            </h3>
+            <p>
+                To Fork a GIT Repo linked to a DID document, the git repository must be accessible to the user. see <a href="#resolve"></a> section.
+            </p>
+            <ol>
+                <li>
+        Create a new Git repository: First, you'll need to create a new Git repository that will serve as the fork of the original DID repository. 
+        This might involve using a Git hosting platform like GitHub or GitLab, or creating a new repository on a server or other platform.
+    </li><li>
+        Clone the original repository: Next, you'll need to clone the original DID repository to your local machine or server. 
+        This will allow you to access the data that is associated with the original DID.
+    </li><li>
+        Create a new branch: Once you have the original DID repository, you'll need to create a new Git branch that will serve 
+        as the basis for your fork. This might involve creating a new branch in the Git command line or using a Git client 
+        or platform.
+    </li><li>
+        Push the new branch to the new repository: Using the new Git branch, you can push the relevant data to the 
+        new Git repository that you created in step 1. This will create a copy of the original DID data in the new repository 
+        and allow you to make changes and updates as needed.
+    </li><li>
+        Update the DID document: Using the new repository URL or Git commit hash, you can update the DID document to reference 
+        the new forked repository. This might involve updating the id property in the DID document to reflect the 
+        new repository URL, as well as updating any other relevant metadata.
+    </li><li>
+        Publish the updated DID document: Finally, you'll need to publish the updated DID document to the relevant platform 
+        or registry. This will make the forked DID publicly available and allow others to resolve it and access the associated data.
+    </li>
+
+</ol>
+</section>
+<section>
+    <h3>
+        Pull Request
+    </h3>
+    <p>
+        To create a pull request for a GIT Repo linked to a DID document, the git repository must be accessible to the user. see <a href="#resolve"></a> section.
+    </p>
+        <ol>
+            <li>
+                Clone the original repository: First, you'll need to clone the original DID repository to your local machine or server. 
+                This will allow you to access the data that is associated with the original DID.   
+                </li><li>
+                Create a new branch: Once you have the original DID repository, you'll need to create a new Git branch that will contain the changes you want to make to the DID. 
+                This might involve creating a new branch in the Git command line or using a Git client or platform.
+            </li><li>
+                Make changes to the DID: Using the new Git branch, you can make the changes to the DID that you want to propose in the pull request. 
+                This might involve updating the id property in the DID document to reflect a new repository URL or other changes to the DID metadata.
+            </li><li>                   
+                Commit the changes: Once you have made the necessary changes, you'll need to commit them to the Git repository using the Git command line 
+                or a Git client. This will create a new Git commit that includes the changes to the DID.
+            </li><li>                  
+                Push the new branch and commit to a forked repository: Next, you'll need to push the new branch and commit to a forked repository that you control. 
+                This might involve creating a new Git repository on a hosting platform like GitHub or GitLab, or using a server or other platform to host the forked repository.
+            </li><li>                   
+                Submit a pull request: Using the hosting platform or other tools, you can then submit a pull request to the original repository that includes 
+                the changes you made to the DID in the forked repository. This will allow the maintainers of the original DID to review the changes and merge them into the main branch of the repository if they are accepted.
+            </li><li>                  
+                Update the DID document: If the pull request is accepted and the changes are merged into the original repository, you'll need to update the id property 
+                in the DID document to reflect the new changes. This might involve referencing the new commit hash or other metadata associated with the merged changes.
+            </li><li>                
+                Publish the updated DID document: Finally, you'll need to publish the updated DID document to the relevant platform or registry. 
+                This will make the updated DID publicly available and allow others to resolve it and access the associated data.
+            </li>
+        </ol>
+    </section>
+    <section>
+        <h3>
+            Deactivate
+        </h3>
+        <p>
+            To create a pull request for a GIT Repo linked to a DID document, the git repository must be accessible to the user. see <a href="#resolve"></a> section.
+        </p>
+            <ol>
+                <li>
+                    Create a new Git commit: First, you'll need to create a new Git commit that indicates that the DID is being deactivated. This might involve adding a new property 
+                    or flag to the JSON-LD file that describes the DID document, indicating that the DID is no longer active.
+                    </li><li>
+                        Push the commit to the repository: Once you've created the new Git commit, you'll need to push it to the Git repository. 
+                        This will make the updated data publicly available and allow others to reference the deactivated version of your DID.
+                </li><li>
+                    Update the DID document: Using the new Git commit hash or repository URL, you can update the DID document to reference the deactivated version of the associated data. 
+                    This might involve updating the updated property in the DID document, as well as any other relevant metadata.                </li><li>                   
+                </li><li>                  
+                    Publish the updated DID document: Finally, you'll need to publish the updated DID document to the relevant platform or registry. 
+                    This will make the deactivated DID publicly available and allow others to resolve it and access the deactivated version of the associated data.                </li><li>                   
+                 </li>
+            </ol>
+            <p class="note">
+                It's important to note that deactivating a DID using the DID:GIT method does not necessarily remove the associated data from the Git repository. Instead, 
+                it simply indicates that the DID is no longer active and should not be used for authentication or other purposes.<a href="#did-document-deactivation"></a>.
+            </p>
+            <p class="issue" data-number="6">
+                Discuss if there should be a way to explicitly mark a git resource as "deactivated" or "deprecated".
+            </p>
+        </section>
+        <section>
+            <h3>
+                Stash
+            </h3>
+            <p>
+                To create a pull request for a GIT Repo linked to a DID document, the git repository must be accessible to the user. see <a href="#resolve"></a> section.
+            </p>
+                <ol>
+                    <li>
+                        Clone the original repository: First, you'll need to clone the original DID repository to your local machine or server. 
+                        This will allow you to access the data that is associated with the original DID.
+                         </li><li>
+                            Create a new branch: Once you have the original DID repository, 
+                            you'll need to create a new Git branch that will contain the changes you want to stash. 
+                            This might involve creating a new branch in the Git command line or using a Git client or platform.
+                          </li><li>
+                            Make changes to the DID: Using the new Git branch, you can make the changes to the DID that you want to stash. This might involve 
+                            updating the id property in the DID document to reflect a new repository URL or other changes to the DID metadata.             </li><li>                   
+                    </li><li>                  
+                        Stash the changes: Once you have made the necessary changes, you can stash them using the Git command line or a Git client. 
+                        This will temporarily save the changes to the branch without committing them to the repository.
+                    </li><li>  
+                        Switch to a different branch: After stashing the changes, 
+                        you can switch to a different Git branch to work on other changes or updates to the DID.
+                    </li><li>  
+                        Apply the stashed changes: When you are ready to apply the stashed changes to the DID, you can do so using the Git command 
+                        line or a Git client. This will restore the changes you made to the DID in the stashed branch and allow you to continue working on them.
+                     </li>
+                </ol>
+                <p class="note">
+                    It's important to note that deactivating a DID using the DID:GIT method does not necessarily remove the associated data from the Git repository. Instead, 
+                    it simply indicates that the DID is no longer active and should not be used for authentication or other purposes.<a href="#did-document-deactivation"></a>.
+                </p>
+                <p class="issue" data-number="6">
+                    Discuss if there should be a way to explicitly mark a git resource as "deactivated" or "deprecated".
+                </p>
+            </section>
+            <section>
+                <h3>
+                    annotate
+                </h3>
+                <p>
+                    To create a pull request for a GIT Repo linked to a DID document, the git repository must be accessible to the user. see <a href="#resolve"></a> section.
+                </p>
+                    <ol>
+                        <li>
+                            Clone the original repository: First, you'll need to clone the original DID repository to your local machine or server. 
+                            This will allow you to access the data that is associated with the original DID.
+                             </li><li>
+                                Create a new branch: Once you have the original DID repository, 
+                                you'll need to create a new Git branch that will contain the changes you want to stash. 
+                                This might involve creating a new branch in the Git command line or using a Git client or platform.
+                              </li><li>
+                                Make changes to the DID: Using the new Git branch, you can make the changes to the DID that you want to stash. This might involve 
+                                updating the id property in the DID document to reflect a new repository URL or other changes to the DID metadata.             </li><li>                   
+                        </li><li>                  
+                            Stash the changes: Once you have made the necessary changes, you can stash them using the Git command line or a Git client. 
+                            This will temporarily save the changes to the branch without committing them to the repository.
+                        </li><li>  
+                            Switch to a different branch: After stashing the changes, 
+                            you can switch to a different Git branch to work on other changes or updates to the DID.
+                        </li><li>  
+                            Apply the stashed changes: When you are ready to apply the stashed changes to the DID, you can do so using the Git command 
+                            line or a Git client. This will restore the changes you made to the DID in the stashed branch and allow you to continue working on them.
+                         </li>
+                    </ol>
+                    <p class="note">
+                        It's important to note that deactivating a DID using the DID:GIT method does not necessarily remove the associated data from the Git repository. Instead, 
+                        it simply indicates that the DID is no longer active and should not be used for authentication or other purposes.<a href="#did-document-deactivation"></a>.
+                    </p>
+                    <p class="issue" data-number="6">
+                        Discuss if there should be a way to explicitly mark a git resource as "deactivated" or "deprecated".
+                    </p>
+                </section>
+    </section>
+
+</section>
+
+<section class="informative">
+    <h2>
+        Relation to other technologies
+    </h2>
+
+    <section>
+        <h3>
+            Relation to the did:web method
+        </h3>
+        <p>
+            Similar to this specification, [[?DID-WEB]] also defines a new DID method based on domain names. The syntax
+            of the identifiers is equivalent with the exceptions that 1. the method name in this specification is
+            <code>git</code> instead of
+            <code>web</code>, and 2. the <code>did:web</code> method also allows an optional colon-separated path
+            component as part of its method-specific identifier, which is not supported by this specification. In terms
+            of functionality, the main difference between the two methods is that while the <code>did:web</code>
+            method requires both git and web infrastructure for its operation, the <code>did:git</code> method requires
+            only git infrastructure.
+        </p>
+    </section>
+
+    <section>
+        <h3>
+            Relation to DID-in-git
+        </h3>
+        <p>
+            The [[?DID-IN-git]] specification also provides a way to connect existing git infrastructure with DIDs. It
+            uses similar Resource Records (RRs). It
+            however does not define a new DID method specification; rather, it defines a way of discovering a DID
+            (using any DID method) from a domain name, using the git infrastructure and protocol. This is intended for
+            use cases where a domain name is used for bootstrapping initial relationships or interactions, but the
+            domain name is not intended to be used beyond such an initial step.
+        </p>
+    </section>
+
+    <section>
+        <h3>
+            Relation to Well Known DID Configuration
+        </h3>
+        <p>
+            Similar to [[?DID-IN-git]], the [[?WELL-KNOWN-DID]] specification also does not define a new DID method and
+            is rather used for discovery of a DID (using any DID method) via an existing domain name.
+        </p>
+        <p>
+            As the discovery
+            mechanism, it uses a <code>/.well-known/</code> path (see [[TBA]]) on a web server in addition to git.
+        </p>
+    </section>
+
+    <section>
+        <h3>
+            Relation to SSH
+        </h3>
+        <p>
+        This specification needs to be used in conjunction with SSH in cases where SSH is used 
+        to authenticate the user and to provide access to the git repository. A seperate Specification will be defined for the DID:SSH specification.
+        </p>
+    </section>
+
+</section>
+
+<section class="informative">
+    <h2>
+        Security considerations
+    </h2>
+<!--
+    <section>
+        <h3>
+            git Security Considerations
+        </h3>
+        <p class="note" title="Applies similarly to did:web">
+            This section was copied and adapted from the [[?DID-WEB]] specification, since
+            similar considerations apply in both DID methods.
+        </p>
+        <p>
+            git presents many of the attack vectors that enable active security and privacy
+            attacks on the <code>did:git</code> method, and it's important that implementors address these
+            concerns via proper configuration of git. For example, without proper security
+            of the git resolution via <a href="https://tools.ietf.org/html/rfc8484">git over HTTPS</a> it's possible for
+            active attackers to intercept the result of the git resolution via a Man in the
+            Middle attack which would point at a malicious server with the incorrect DID
+            document.
+        </p>
+        <p>
+            Additionally, implementors should be aware of issues presented by a Spoofed git
+            records where the record returned by a malicious git Server is inauthentic and
+            allows the record to be pointed at a malicious server which contains a different
+            DID Document. To prevent this type of issue, usage of gitSEC which is defined in
+            <a href="https://tools.ietf.org/html/rfc4033">RFC4033</a>,
+            <a href="https://tools.ietf.org/html/rfc4034">RFC4034</a>, and
+            <a href="https://tools.ietf.org/html/rfc4035">RFC4035</a>.
+        </p>
+    </section>
+
+    <section>
+        <h3>
+            DID Document Integrity Verification
+        </h3>
+
+        <p class="issue" title="Hashlinks">
+            Add discussion of using <a
+                href="https://tools.ietf.org/html/draft-sporny-hashlink">Hashlinks</a> and the
+            <code>hl</code> DID parameter to aid
+            integrity protection and verification of the DID document.
+        </p>
+
+    </section>
+-->
+    <section>
+        <h3>
+            DID Document Auditing and History
+        </h3>
+        <p>
+            The DID operations defined in this specification do not provide an immutable history of changes that is
+            typical for other forms of blockchain/DLT based DID methods, and which can be used for auditing purposes. This can lead
+            to certain attacks where the DID document is manipulated temporarily, or different DID documents are
+            presented to different resolvers, without an easy way to detect this behavior.
+        </p>
+        <p class="issue">
+            Add further discussion and possible mitigations.
+        </p>
+    </section>
+
+    <section>
+        <h3>
+            Decentralization
+        </h3>
+        <p>
+            The DID Working Group has extensively discussed the meaning of "decentralized" identifiers, and various
+            aspects of this terms. GIT is considered to be a decentralized system, in a traditional sense.
+            Further considerations will be made to updated versions of the document. <!-- see [[?DID-RUBRIC]].-->
+        </p>
+    </section>
+</section>
+
+<section class="informative">
+    <h2>
+        Privacy considerations
+    </h2>
+<!--
+    <section>
+        <h3>
+            git Privacy Considerations
+        </h3>
+        <p class="note" title="Applies similarly to did:web">
+            This section was copied and adapted from the [[?DID-WEB]] specification, since
+            similar considerations apply in both DID methods.
+        </p>
+        <p>
+            Due to the nature of the <code>did:git</code> method relying upon a git in order to resolve
+            the DID, all resolutions of a <code>did:git</code> identifier have the potential to be
+            tracked by a git provider. To mitigate the
+            issue of the relying party being tracked when resolving the DID document, the
+            relying party should look to either use a trusted Universal Resolver service to
+            gain herd privacy, utilize a VPN service or perform a resolution over the TOR
+            network. Another emerging solution that will be useful to address this is <a
+                href="https://tools.ietf.org/html/draft-pauly-dprive-oblivious-doh-03">
+            draft-pauly-dprive-oblivious-doh-03</a>
+        </p>
+    </section>
+-->
+</section>
+
+<section class="appendix informative">
+    <h1>
+        Reference implementations
+    </h1>
+    <p>
+        TBA/TBD.
+    </p>
+</section>
+
+<section class="appendix informative">
+    <h1>
+        Acknowledgements
+    </h1>
+    <p>
+        The author would like to acknowledge the people who work tirelessly often without recgonition, compensation or reembursement of costs associated
+        to their work. The hope is that the consequence of works, that includes this specification and if / as needed, the one for DNS:SSH, are parts of work that 
+        will lead to better approaches being available to address the widespread problems associated with web slavery, as to better support human rights as they
+        relate to the works done by people, seeking to make a better world for all.
+    </p>
+</section>
+</body>
+</html>
