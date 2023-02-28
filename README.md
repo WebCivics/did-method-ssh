@@ -40,4 +40,10 @@ Document Format:
 ``
 
 ### note
-this method is intended to require DID:GIT
+this method is intended to require [DID:GIT](https://github.com/WebCivics/did-method-git)
+
+## SSH Specs
+https://www.openssh.com/specs.html
+
+### PubKey in DNS 
+https://www.rfc-editor.org/rfc/rfc4255
